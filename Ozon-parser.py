@@ -40,7 +40,7 @@ def get_product_info(product_url):
 
     if json_data["layout"][0]["component"] == "userAdultModal":
         product_id = str(full_name.split()[-1])[1:-1]
-        return (product_id, full_name, "Товар для лиц старше 18 лет", None, None)
+        return (product_id, full_name, "Товары для взрослых", None)
     else:
         # description = json.loads(json_data["seo"]["script"][0]["innerHTML"])["description"]
         image_url = json.loads(json_data["seo"]["script"][0]["innerHTML"])["image"]
@@ -48,7 +48,7 @@ def get_product_info(product_url):
                 json.loads(json_data["seo"]["script"][0]["innerHTML"])["offers"]["priceCurrency"]
         product_id = json.loads(json_data["seo"]["script"][0]["innerHTML"])["sku"]
 
-        return (product_id, full_name, price, image_url)
+        return product_id, full_name, price, image_url
 
 
 def get_mainpage_cards(driver, url):
@@ -129,15 +129,18 @@ def get_searchpage_cards(driver, url, all_cards=[]):
 
 
 if __name__ == "__main__":
-    # Get the filename from the user
-    filename_prefix = input("Enter the filename prefix: ")
+    print("Укажите позицию для парсинга:", '1) Балтика №0 Нефильтрованное Пшеничное Банка 0,45', '2) Flash Up Energy банка 0,45', sep='\n')
+    if int(input()) == 1:
+        url_search = "https://www.ozon.ru/search/?from_global=true&text=%D0%91%D0%B0%D0%BB%D1%82%D0%B8%D0%BA%D0%B0+%E2%84%960+%D0%9D%D0%B5%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%BE%D0%B5+%D0%9F%D1%88%D0%B5%D0%BD%D0%B8%D1%87%D0%BD%D0%BE%D0%B5+%D0%91%D0%B0%D0%BD%D0%BA%D0%B0+0%2C45"
+    else:
+        url_search = 'https://www.ozon.ru/search/?text=Flash+Up+Energy+%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0+0%2C45&from_global=true'
+
+    filename_prefix = input("Укажите название файла: ")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{filename_prefix}_{timestamp}.csv"
 
     driver = init_webdriver()
     end_list = list()
-
-    url_search = f"https://www.ozon.ru/search/?from_global=true&text=%D0%91%D0%B0%D0%BB%D1%82%D0%B8%D0%BA%D0%B0+%E2%84%960+%D0%9D%D0%B5%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%BE%D0%B5+%D0%9F%D1%88%D0%B5%D0%BD%D0%B8%D1%87%D0%BD%D0%BE%D0%B5+%D0%91%D0%B0%D0%BD%D0%BA%D0%B0+0%2C45"
 
     search_cards = get_searchpage_cards(driver, url_search)
 
